@@ -1,0 +1,44 @@
+<form [formGroup]="addForm">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title i18n>Add a user</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label i18n>Name</mat-label>
+            <input matInput formControlName="name" />
+            @if (addForm.controls['name'].hasError('required')) {
+            <mat-error i18n>Name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label i18n>Email</mat-label>
+            <input matInput formControlName="email" />
+            @if (addForm.controls['email'].hasError('required')) {
+            <mat-error i18n>Email is required</mat-error>
+            } @else if (addForm.controls['email'].hasError('email')){
+            <mat-error i18n>Email needs to be a valid email address</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        (click)="addUser()"
+        i18n
+      >
+        Add
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -1,0 +1,53 @@
+{
+  "name": "User service UI",
+  "dockerComposeFile": [
+    "../compose.yaml",
+    "compose.yaml"
+  ],
+  "service": "user-service-ui",
+  "workspaceFolder": "/workspaces",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "files.eol": "\n",
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+        "editor.formatOnSave": true,
+        "editor.rulers": [
+          80,
+          120
+        ],
+        "[scss]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[html]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      },
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "Angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "redhat.vscode-yaml",
+        "GitHub.vscode-pull-request-github",
+        "github.vscode-github-actions"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": "true",
+      "upgradePackages": "true"
+    }
+  },
+  "forwardPorts": [
+    4200
+  ],
+  "postCreateCommand": "npm install",
+  "remoteUser": "node"
+}

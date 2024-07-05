@@ -1,0 +1,31 @@
+<header>
+  <mat-toolbar class="toolbar">
+    <span i18n>User service</span>
+    <span class="toolbar__spacer"></span>
+    <nav>
+      <a
+        aria-label="Add a user"
+        i18n-aria-label
+        mat-icon-button
+        routerLink="/add"
+        routerLinkActive="active"
+      >
+        <mat-icon>add</mat-icon>
+      </a>
+      <a
+        aria-label="List users"
+        i18n-aria-label
+        mat-icon-button
+        routerLink="/list"
+        routerLinkActive="active"
+      >
+        <mat-icon>list</mat-icon>
+      </a>
+    </nav>
+  </mat-toolbar>
+</header>
+<main>
+  <article>
+    <router-outlet />
+  </article>
+</main>

@@ -1,0 +1,7 @@
+services:
+  user-service-ui:
+    build:
+      target: dev
+    volumes:
+      - .:/workspaces:cached
+    command: sleep infinity
