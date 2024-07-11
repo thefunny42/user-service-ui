@@ -6,4 +6,4 @@ services:
       context: .
     image: ghcr.io/thefunny42/user-service-ui:main
     ports:
-      - 80:80
+      - 4200:4200

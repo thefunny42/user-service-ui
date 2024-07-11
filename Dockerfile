@@ -20,10 +20,9 @@ FROM base AS dev
 RUN apk add --no-cache zsh shadow docker-cli docker-cli-compose docker-zsh-completion
 RUN chsh -s /bin/zsh node
 
-ENV PORT 4200
 EXPOSE 4200
 
-FROM nginx:alpine AS final
+FROM nginxinc/nginx-unprivileged:alpine AS final
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist/user-service-ui/browser /usr/share/nginx/html
