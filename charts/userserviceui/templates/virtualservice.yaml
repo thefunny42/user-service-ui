@@ -1,0 +1,36 @@
+
+{{- if .Capabilities.APIVersions.Has "networking.istio.io/v1alpha3" }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "userserviceui.fullname" . }}
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - {{ tpl .Values.istio.gateway . }}
+  http:
+  - name: "authservice"
+    match:
+    - uri:
+        prefix: "/api/authentication"
+    route:
+    - destination:
+        host: {{ include "authservice.fullname" .Subcharts.authservice }}
+        port:
+          number: {{ .Values.authservice.service.port }}
+  - name: "userservice"
+    match:
+    - uri:
+        prefix: "/api/user"
+    route:
+    - destination:
+        host: {{ include "userservice.fullname" .Subcharts.userservice }}
+        port:
+          number: {{ .Values.userservice.service.port }}
+  - route:
+    - destination:
+        host: {{ include "userserviceui.fullname" . }}
+        port:
+          number: {{ .Values.service.port }}
+{{- end }}

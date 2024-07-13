@@ -1,0 +1,13 @@
+apiVersion: v2
+name: userserviceui
+description: User service UI
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: userservice
+    repository: "file:///home/sylvain/user-service/charts/userservice"
+    version: "0.2.0"
+  - name: authservice
+    version: "0.1.0"
+    repository: "file:///home/sylvain/auth-service/charts/authservice"

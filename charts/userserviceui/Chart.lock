@@ -1,0 +1,9 @@
+dependencies:
+- name: userservice
+  repository: file:///home/sylvain/user-service/charts/userservice
+  version: 0.2.0
+- name: authservice
+  repository: file:///home/sylvain/auth-service/charts/authservice
+  version: 0.1.0
+digest: sha256:17868092c49e73f8258e34d54ef43d52aa6f337f9403e99d6cf80057d3f26bd5
+generated: "2024-07-12T09:56:58.2482396+02:00"
