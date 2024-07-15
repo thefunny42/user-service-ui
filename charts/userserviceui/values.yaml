@@ -47,7 +47,6 @@ service:
   type: ClusterIP
   port: 4200
 
-
 resources:
   limits:
     cpu: 200m
@@ -92,10 +91,10 @@ tolerations: []
 affinity: {}
 
 istio:
-  gateway: '{{ .Release.Name }}-gateway'
+  ingressGateway: "{{ .Release.Name }}-ingress-gateway"
 
 authservice:
   sessionTTL: 1200
 
 userservice:
-  jwksUrl: "http://{{ .Release.Name}}-authservice:8000/api/authentication/jwks.json"
+  jwksUrl: "http://{{ .Release.Name}}-authservice:8000/.well-known/jwks.json"
