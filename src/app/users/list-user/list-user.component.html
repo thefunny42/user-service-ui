@@ -1,13 +1,19 @@
+@defer (when users.ready()) {
 <mat-card>
   <mat-card-header>
     <mat-card-title i18n>List users</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <table mat-table [dataSource]="dataSource">
+    @if (users.entities().length) {
+    <table mat-table [dataSource]="users.entities()">
       <mat-text-column name="name" headerText="Name"></mat-text-column>
       <mat-text-column name="email" headerText="Email"></mat-text-column>
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
       <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
     </table>
+    } @else {
+    <p i18n>No users, you can add some.</p>
+    }
   </mat-card-content>
 </mat-card>
+}

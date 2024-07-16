@@ -1,7 +1,11 @@
 <header>
   <mat-toolbar class="toolbar">
-    <span i18n>User service</span>
+    <a mat-icon-button aria-label="Home" routerLink="/">
+      <mat-icon>home</mat-icon>
+    </a>
+    <span class="toolbar__title">User service</span>
     <span class="toolbar__spacer"></span>
+    @if (user.isLoggedIn()) {
     <nav>
       <a
         aria-label="Add a user"
@@ -12,16 +16,28 @@
       >
         <mat-icon>add</mat-icon>
       </a>
-      <a
-        aria-label="List users"
-        i18n-aria-label
+      @if (user.user(); as currentUser) {
+      <button
         mat-icon-button
-        routerLink="/list"
-        routerLinkActive="active"
+        [matMenuTriggerFor]="menu"
+        aria-label="user menu"
+        i18n-aria-label
       >
-        <mat-icon>list</mat-icon>
-      </a>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <span mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>{{ currentUser.name }}</span>
+        </span>
+        <a mat-menu-item href="/authentication/logout">
+          <mat-icon>logout</mat-icon>
+          <span i18n>Logout</span>
+        </a>
+      </mat-menu>
+      }
     </nav>
+    }
   </mat-toolbar>
 </header>
 <main>
