@@ -2,12 +2,27 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title i18n>List users</mat-card-title>
+    <span class="spacer"></span>
+    <a
+      aria-label="Add a user"
+      i18n-aria-label
+      mat-icon-button
+      [routerLink]="['..', 'add']"
+    >
+      <mat-icon>add</mat-icon>
+    </a>
   </mat-card-header>
+
   <mat-card-content>
     @if (users.entities().length) {
     <table mat-table [dataSource]="users.entities()">
       <mat-text-column name="name" headerText="Name"></mat-text-column>
-      <mat-text-column name="email" headerText="Email"></mat-text-column>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let user">
+          <a mat-button [routerLink]="[user.id]">{{ user.email }}</a>
+        </td>
+      </ng-container>
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
       <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
     </table>

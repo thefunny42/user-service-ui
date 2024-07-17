@@ -4,18 +4,9 @@
       <mat-icon>home</mat-icon>
     </a>
     <span class="toolbar__title">User service</span>
-    <span class="toolbar__spacer"></span>
+    <span class="spacer"></span>
     @if (user.isLoggedIn()) {
     <nav>
-      <a
-        aria-label="Add a user"
-        i18n-aria-label
-        mat-icon-button
-        routerLink="/add"
-        routerLinkActive="active"
-      >
-        <mat-icon>add</mat-icon>
-      </a>
       @if (user.user(); as currentUser) {
       <button
         mat-icon-button

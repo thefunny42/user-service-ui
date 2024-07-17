@@ -18,7 +18,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { usersStore } from "../users.store";
 import { User } from "../users.service";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-add-user",
@@ -28,7 +29,9 @@ import { Router } from "@angular/router";
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
     ReactiveFormsModule,
+    RouterModule,
   ],
   templateUrl: "./add-user.component.html",
   styleUrl: "./add-user.component.scss",
@@ -36,7 +39,7 @@ import { Router } from "@angular/router";
 })
 export class AddUserComponent {
   private fb = inject(FormBuilder);
-  private notifier = inject(MatSnackBar);
+  private snack = inject(MatSnackBar);
   private users = inject(usersStore);
   private router = inject(Router);
   private submitted = signal<boolean>(false);
@@ -44,11 +47,11 @@ export class AddUserComponent {
   private effects = effect(() => {
     if (!this.submitted() || this.users.busy()) return;
     if (this.users.error()) {
-      this.notifier.open($localize`Could not add user`, $localize`Dismiss`, {
+      this.snack.open($localize`Could not add user`, $localize`Dismiss`, {
         duration: 5 * 1000,
       });
     } else {
-      this.notifier.open($localize`User added`, $localize`Dismiss`, {
+      this.snack.open($localize`User added`, $localize`Dismiss`, {
         duration: 5 * 1000,
       });
       this.router.navigate(["list"]);

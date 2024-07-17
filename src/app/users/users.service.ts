@@ -28,4 +28,8 @@ export class UsersService {
   public addUser(user: User) {
     return this.http.post<IdentifiedUser>("/api/users", user);
   }
+
+  public removeUser(user: IdentifiedUser) {
+    return this.http.delete(`/api/users/${user.id}`).pipe(map(() => user.id));
+  }
 }
