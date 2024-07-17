@@ -22,7 +22,7 @@ export const userInfoStore = signalStore(
     onInit(store, service = inject(UserInfoService)) {
       service.userInfo
         .pipe(takeUntilDestroyed())
-        .subscribe((userInfo) => patchState(store, (state) => userInfo));
+        .subscribe((userInfo) => patchState(store, () => userInfo));
     },
   })
 );

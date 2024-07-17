@@ -1,12 +1,7 @@
-import {
-  HttpClient,
-  HttpEvent,
-  HttpHandlerFn,
-  HttpRequest,
-} from "@angular/common/http";
+import { HttpClient, HttpInterceptorFn } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 
-import { firstValueFrom, map, mergeMap, Observable, shareReplay } from "rxjs";
+import { firstValueFrom, map, mergeMap, shareReplay } from "rxjs";
 import { cacheValue } from "./utils";
 import { CanMatchFn } from "@angular/router";
 
@@ -56,11 +51,11 @@ export class UserInfoService {
   );
 }
 
-export function authInterceptor(
-  req: HttpRequest<unknown>,
-  next: HttpHandlerFn,
+export const authInterceptor: HttpInterceptorFn = (
+  req,
+  next,
   service = inject(UserInfoService)
-): Observable<HttpEvent<unknown>> {
+) => {
   if (req.url.startsWith("/api")) {
     return service.token.pipe(
       mergeMap((token) =>
@@ -73,7 +68,7 @@ export function authInterceptor(
     );
   }
   return next(req);
-}
+};
 
 export const loggedInGuard: CanMatchFn = (
   route,

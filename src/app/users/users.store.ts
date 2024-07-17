@@ -1,9 +1,8 @@
-import { inject } from "@angular/core";
+import { computed, inject } from "@angular/core";
 import {
-  PartialStateUpdater,
   patchState,
   signalStore,
-  StateSignal,
+  withComputed,
   withHooks,
   withMethods,
   withState,
@@ -12,65 +11,49 @@ import {
 import { UsersService, User, IdentifiedUser } from "./users.service";
 import {
   addEntity,
-  EntityState,
   removeEntity,
   setEntities,
   withEntities,
 } from "@ngrx/signals/entities";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { mergeMap, Observable, pipe, tap } from "rxjs";
+import { map, mergeMap, pipe, tap } from "rxjs";
 
-interface Busy {
-  busy: boolean;
+enum Status {
+  FETCHING,
+  FETCHED,
+  FAILED,
 }
 
-interface Ready {
-  ready: boolean;
+interface State {
+  status: Status;
 }
 
-interface Error {
-  error: string | null;
-}
-
-interface State extends Busy, Ready, Error {}
-
-const setBusy = (busy: boolean): Partial<State> => ({ busy });
-
-const setReady = (ready: boolean): Partial<State> => ({ ready });
-
-const setError = (error: string | null): Partial<State> => ({ error });
-
-const rxAction = <Input, Result, Entity>(
-  store: StateSignal<EntityState<Entity> & State>,
-  action: (value: Input) => Observable<Result>,
-  updater: (value: Result) => PartialStateUpdater<EntityState<Entity>>
-) =>
-  rxMethod<Input>(
-    pipe(
-      tap(() => patchState(store, setBusy(true), setError(null))),
-      mergeMap(action),
-      tap({
-        next: (value) => patchState(store, setBusy(false), updater(value)),
-        error: (error) => patchState(store, setBusy(false), setError(error)),
-      })
-    )
-  );
+const setState = (status: Status): Partial<State> => ({ status });
 
 export const usersStore = signalStore(
   { providedIn: "root" },
   withEntities<IdentifiedUser>(),
-  withState<State>(() => ({ busy: false, ready: false, error: null })),
+  withState<State>(() => ({ status: Status.FETCHING })),
+  withComputed((store) => ({
+    ready: computed(() => store.status() == Status.FETCHED),
+  })),
   withMethods((store, service = inject(UsersService)) => ({
-    add: rxAction(store, (user: User) => service.addUser(user), addEntity),
-    remove: rxAction(
-      store,
-      (user: IdentifiedUser) => service.removeUser(user),
-      removeEntity
-    ),
+    add: (user: User) =>
+      service
+        .addUser(user)
+        .pipe(map((user) => patchState(store, addEntity(user)))),
+    remove: (user: IdentifiedUser) =>
+      service
+        .removeUser(user)
+        .pipe(map((id) => patchState(store, removeEntity(id)))),
     refresh: rxMethod<void>(
       pipe(
         mergeMap(() => service.users),
-        tap((users) => patchState(store, setReady(true), setEntities(users)))
+        tap({
+          next: (users) =>
+            patchState(store, setState(Status.FETCHED), setEntities(users)),
+          error: () => patchState(store, setState(Status.FAILED)),
+        })
       )
     ),
   })),

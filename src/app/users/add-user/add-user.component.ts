@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-  signal,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
@@ -42,21 +36,6 @@ export class AddUserComponent {
   private snack = inject(MatSnackBar);
   private users = inject(usersStore);
   private router = inject(Router);
-  private submitted = signal<boolean>(false);
-
-  private effects = effect(() => {
-    if (!this.submitted() || this.users.busy()) return;
-    if (this.users.error()) {
-      this.snack.open($localize`Could not add user`, $localize`Dismiss`, {
-        duration: 5 * 1000,
-      });
-    } else {
-      this.snack.open($localize`User added`, $localize`Dismiss`, {
-        duration: 5 * 1000,
-      });
-      this.router.navigate(["list"]);
-    }
-  });
 
   protected addForm = this.fb.group({
     name: new FormControl<string>("", {
@@ -70,8 +49,19 @@ export class AddUserComponent {
   });
 
   protected addUser() {
-    if (!this.addForm.value) return;
-    this.users.add(this.addForm.value as User);
-    this.submitted.set(true);
+    if (!this.addForm.valid) return;
+    this.users.add(this.addForm.value as User).subscribe({
+      next: () => {
+        this.snack.open($localize`User added`, $localize`Dismiss`, {
+          duration: 5 * 1000,
+        });
+        this.router.navigate(["list"]);
+      },
+      error: () => {
+        this.snack.open($localize`Could not add user`, $localize`Dismiss`, {
+          duration: 5 * 1000,
+        });
+      },
+    });
   }
 }
